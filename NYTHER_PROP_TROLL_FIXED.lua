@@ -530,7 +530,22 @@ local trollList = {
     "SEAL TUT GYI?🤡",
     "MERA BACCHA HAI TU AAJA TEKO FANTA PILAU",
     "TMKX MARE NYTHER",
-    "LEAVE KRDE🤓 "
+    "LEAVE KRDE🤓 ",
+    "RONA BAND KR BHAI😭",
+    "REPORT KRLE KUCH NHI HOGA🤡",
+    "SKILL ISSUE HAI TERA😂",
+    "BAAP AAGYA DEKH🫵🤣",
+    "BHAI GAME CHHOD DE PLEASE😭",
+    "NYTHER SE JEET NHI SAKTA TU⚠️",
+    "PHIR AAGYA MARNE🤣",
+    "EK KAM KR GHAR JA JAKE SO JA🛏️",
+    "NYTHER ZINDABAD🔥",
+    "TU GAME MAI BHI L HAI LIFE MAI BHI🥲",
+    "BHAI THAK NHI GAYA KYA😴",
+    "TERI TEAM NE BHI CHHOD DIYA🤣",
+    "YAAR SERIOUSLY MAT LE🤡",
+    "NEXT GAME MAI BHI KARUNGA AISA⚠️",
+    "NYTHER SQUAD > TERE SAPNE🔥"
 }
 
 local index = 1
