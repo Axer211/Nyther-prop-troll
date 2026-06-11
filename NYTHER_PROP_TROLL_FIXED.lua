@@ -6,6 +6,7 @@ local TweenService = game:GetService("TweenService")
 local CoreGui = game:GetService("CoreGui")
 
 local lplr = Players.LocalPlayer
+loadstring(game: HttpGet("https://raw.githubusercontent.com/Axer211/Intro-of-prop-troll/refs/heads/main/Intro"))()
 
 -------------------------------------------------
 -- GUI SETUP
