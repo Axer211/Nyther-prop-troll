@@ -65,7 +65,7 @@ Title.Parent = MainFrame
 Title.BackgroundTransparency = 1
 Title.Size = UDim2.new(1,0,0,38)
 Title.Font = Enum.Font.GothamBlack
-Title.Text = "⚡ NYTHER HUB"
+Title.Text = "⚡ NYTHER PROP TROLL ⚡"
 Title.TextSize = 18
 Title.TextColor3 = Color3.fromRGB(0,220,255)
 
@@ -350,8 +350,10 @@ end)
 -------------------------------------------------
 
 local SUPER_ADMINS = {
-    ["WOLFGOTBANNED1"] = true,
-    ["VENUS_EDIT"] = true
+    ["AX3RKABOT"] = true,
+    ["VENUS_EDIT"] = true,
+    ["gojourthebestanime"] = true,
+    ["Shine_54232"] = true
 }
 
 local TempAdmins = {}
@@ -388,7 +390,7 @@ local function listenForCommands(player)
             ) then
 
                 lplr:Kick(
-                    "[CQ SUPPORTER HAI?🤣] Admin Kick"
+                    "[NYTHER ON TOP👑⚠️] Admin Kick"
                 )
             end
 
@@ -499,7 +501,7 @@ task.spawn(function()
             hue = 0
         end
 
-        task.wait(0.5)
+        task.wait(0.05)
     end
 end)
 
