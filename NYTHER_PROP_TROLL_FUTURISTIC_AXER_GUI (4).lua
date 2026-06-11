@@ -1,0 +1,720 @@
+-- [[ NYTHER PROP TROLL V1 ]] --
+
+local Re
+icatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local CoreGui = game:GetService("CoreGui")
+
+local lplr = Players.LocalPlayer
+
+-------------------------------------------------
+-- GUI SETUP
+-------------------------------------------------
+
+pcall(function()
+    CoreGui:FindFirstChild("AXER_NYTHER_GUI"):Destroy()
+end)
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "AXER_NYTHER_GUI"
+ScreenGui.Parent = CoreGui
+ScreenGui.IgnoreGuiInset = true
+ScreenGui.ResetOnSpawn = false
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Parent = ScreenGui
+MainFrame.Size = UDim2.new(0,320,0,280)
+MainFrame.Position = UDim2.new(0.5,-160,0.5,-140)
+MainFrame.BackgroundColor3 = Color3.fromRGB(8,8,18)
+MainFrame.BorderSizePixel = 0
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0,18)
+UICorner.Parent = MainFrame
+
+local UIStroke = Instance.new("UIStroke")
+UIStroke.Parent = MainFrame
+UIStroke.Thickness = 2
+UIStroke.Color = Color3.fromRGB(0,170,255)
+
+local Gradient = Instance.new("UIGradient")
+Gradient.Parent = MainFrame
+Gradient.Rotation = 45
+Gradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(5,5,15)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(20,20,40))
+}
+
+local Glow = Instance.new("ImageLabel")
+Glow.Parent = MainFrame
+Glow.BackgroundTransparency = 1
+Glow.Size = UDim2.new(1,40,1,40)
+Glow.Position = UDim2.new(0,-20,0,-20)
+Glow.Image = "rbxassetid://5028857084"
+Glow.ImageTransparency = 0.35
+Glow.ScaleType = Enum.ScaleType.Slice
+Glow.SliceCenter = Rect.new(24,24,276,276)
+Glow.ZIndex = 0
+
+-- TITLE
+local Title = Instance.new("TextLabel")
+Title.Parent = MainFrame
+Title.BackgroundTransparency = 1
+Title.Size = UDim2.new(1,0,0,38)
+Title.Font = Enum.Font.GothamBlack
+Title.Text = "⚡ NYTHER HUB"
+Title.TextSize = 18
+Title.TextColor3 = Color3.fromRGB(0,220,255)
+
+-- MINIMIZE BUTTON
+local Close = Instance.new("TextButton")
+Close.Parent = MainFrame
+Close.Size = UDim2.new(0,34,0,34)
+Close.Position = UDim2.new(1,-45,0,2)
+Close.BackgroundColor3 = Color3.fromRGB(20,20,35)
+Close.Text = "-"
+Close.Font = Enum.Font.GothamBold
+Close.TextSize = 24
+Close.TextColor3 = Color3.fromRGB(255,255,255)
+Close.BorderSizePixel = 0
+Close.ZIndex = 10
+
+Instance.new("UICorner", Close).CornerRadius = UDim.new(1,0)
+
+-- MINIMIZED BUTTON
+local MiniButton = Instance.new("TextButton")
+MiniButton.Parent = ScreenGui
+MiniButton.Size = UDim2.new(0,58,0,58)
+MiniButton.Position = UDim2.new(0,20,0.5,-29)
+MiniButton.BackgroundColor3 = Color3.fromRGB(8,8,18)
+MiniButton.BackgroundTransparency = 1
+MiniButton.Text = "⚡"
+MiniButton.Font = Enum.Font.GothamBlack
+MiniButton.TextSize = 28
+MiniButton.TextColor3 = Color3.fromRGB(0,220,255)
+MiniButton.TextTransparency = 1
+MiniButton.Visible = false
+MiniButton.BorderSizePixel = 0
+MiniButton.Active = true
+MiniButton.Draggable = true
+MiniButton.ZIndex = 100
+
+Instance.new("UICorner", MiniButton).CornerRadius = UDim.new(1,0)
+
+local MiniStroke = Instance.new("UIStroke")
+MiniStroke.Parent = MiniButton
+MiniStroke.Thickness = 2
+MiniStroke.Color = Color3.fromRGB(0,170,255)
+MiniStroke.Transparency = 1
+
+local MiniGradient = Instance.new("UIGradient")
+MiniGradient.Parent = MiniStroke
+MiniGradient.Rotation = 45
+MiniGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0,255,200)),
+    ColorSequenceKeypoint.new(0.25, Color3.fromRGB(0,170,255)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(170,0,255)),
+    ColorSequenceKeypoint.new(0.75, Color3.fromRGB(255,0,170)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(0,255,200))
+}
+
+task.spawn(function()
+    while true do
+        task.wait(0.03)
+        MiniGradient.Rotation = (MiniGradient.Rotation + 3) % 360
+    end
+end)
+
+-- TEXTBOX
+local TextBox = Instance.new("TextBox")
+TextBox.Parent = MainFrame
+TextBox.Position = UDim2.new(0.08,0,0.14,0)
+TextBox.Size = UDim2.new(0.84,0,0,28)
+TextBox.BackgroundColor3 = Color3.fromRGB(15,15,30)
+TextBox.PlaceholderText = "Target..."
+TextBox.TextColor3 = Color3.fromRGB(0,220,255)
+TextBox.PlaceholderColor3 = Color3.fromRGB(100,150,200)
+TextBox.BorderSizePixel = 0
+TextBox.Font = Enum.Font.GothamBold
+TextBox.TextSize = 14
+
+Instance.new("UICorner", TextBox).CornerRadius = UDim.new(0,10)
+
+local TextBoxStroke = Instance.new("UIStroke")
+TextBoxStroke.Parent = TextBox
+TextBoxStroke.Thickness = 1
+TextBoxStroke.Color = Color3.fromRGB(0,170,255)
+
+-- START BUTTON
+local StartBtn = Instance.new("TextButton")
+StartBtn.Parent = MainFrame
+StartBtn.Position = UDim2.new(0.08,0,0.25,0)
+StartBtn.Size = UDim2.new(0.84,0,0,26)
+StartBtn.BackgroundColor3 = Color3.fromRGB(0,180,100)
+StartBtn.Text = "▶ START"
+StartBtn.TextColor3 = Color3.fromRGB(255,255,255)
+StartBtn.BorderSizePixel = 0
+StartBtn.Font = Enum.Font.GothamBold
+StartBtn.TextSize = 14
+
+Instance.new("UICorner", StartBtn).CornerRadius = UDim.new(0,10)
+
+local StartStroke = Instance.new("UIStroke")
+StartStroke.Parent = StartBtn
+StartStroke.Thickness = 1
+StartStroke.Color = Color3.fromRGB(0,220,150)
+
+-- STOP BUTTON
+local StopBtn = Instance.new("TextButton")
+StopBtn.Parent = MainFrame
+StopBtn.Position = UDim2.new(0.08,0,0.36,0)
+StopBtn.Size = UDim2.new(0.84,0,0,26)
+StopBtn.BackgroundColor3 = Color3.fromRGB(200,0,50)
+StopBtn.Text = "⏹ STOP"
+StopBtn.TextColor3 = Color3.fromRGB(255,255,255)
+StopBtn.BorderSizePixel = 0
+StopBtn.Font = Enum.Font.GothamBold
+StopBtn.TextSize = 14
+
+Instance.new("UICorner", StopBtn).CornerRadius = UDim.new(0,10)
+
+local StopStroke = Instance.new("UIStroke")
+StopStroke.Parent = StopBtn
+StopStroke.Thickness = 1
+StopStroke.Color = Color3.fromRGB(255,100,100)
+
+-- RGB BUTTON
+local RGBBtn = Instance.new("TextButton")
+RGBBtn.Parent = MainFrame
+RGBBtn.Position = UDim2.new(0.08,0,0.47,0)
+RGBBtn.Size = UDim2.new(0.84,0,0,26)
+RGBBtn.BackgroundColor3 = Color3.fromRGB(0,120,255)
+RGBBtn.Text = "🌈 RGB: OFF"
+RGBBtn.TextColor3 = Color3.fromRGB(255,255,255)
+RGBBtn.BorderSizePixel = 0
+RGBBtn.Font = Enum.Font.GothamBold
+RGBBtn.TextSize = 14
+
+Instance.new("UICorner", RGBBtn).CornerRadius = UDim.new(0,10)
+
+local RGBStroke = Instance.new("UIStroke")
+RGBStroke.Parent = RGBBtn
+RGBStroke.Thickness = 1
+RGBStroke.Color = Color3.fromRGB(0,200,255)
+
+-- SPEED BUTTON
+local SpeedBtn = Instance.new("TextButton")
+SpeedBtn.Parent = MainFrame
+SpeedBtn.Position = UDim2.new(0.08,0,0.58,0)
+SpeedBtn.Size = UDim2.new(0.84,0,0,26)
+SpeedBtn.BackgroundColor3 = Color3.fromRGB(255,140,0)
+SpeedBtn.Text = "⚙ SPEED: NORM"
+SpeedBtn.TextColor3 = Color3.fromRGB(255,255,255)
+SpeedBtn.BorderSizePixel = 0
+SpeedBtn.Font = Enum.Font.GothamBold
+SpeedBtn.TextSize = 14
+
+Instance.new("UICorner", SpeedBtn).CornerRadius = UDim.new(0,10)
+
+local SpeedStroke = Instance.new("UIStroke")
+SpeedStroke.Parent = SpeedBtn
+SpeedStroke.Thickness = 1
+SpeedStroke.Color = Color3.fromRGB(255,180,50)
+
+-- INFO LABEL
+local InfoLabel = Instance.new("TextLabel")
+InfoLabel.Parent = MainFrame
+InfoLabel.Position = UDim2.new(0.08,0,0.69,0)
+InfoLabel.Size = UDim2.new(0.84,0,0,80)
+InfoLabel.BackgroundColor3 = Color3.fromRGB(10,10,20)
+InfoLabel.BackgroundTransparency = 0.3
+InfoLabel.BorderSizePixel = 0
+InfoLabel.Font = Enum.Font.GothamBold
+InfoLabel.Text = "ℹ INFO\n\nTHIS SCRIPT WAS CREATED BY AXER\nV1\nONLY FOR NYTHER MEMBERS"
+InfoLabel.TextColor3 = Color3.fromRGB(0,220,255)
+InfoLabel.TextSize = 11
+InfoLabel.TextWrapped = true
+InfoLabel.ZIndex = 5
+
+Instance.new("UICorner", InfoLabel).CornerRadius = UDim.new(0,8)
+
+local InfoStroke = Instance.new("UIStroke")
+InfoStroke.Parent = InfoLabel
+InfoStroke.Thickness = 1
+InfoStroke.Color = Color3.fromRGB(0,170,255)
+
+-- NEON ANIMATION
+task.spawn(function()
+    while true do
+        TweenService:Create(UIStroke, TweenInfo.new(1), {Color = Color3.fromRGB(0,255,255)}):Play()
+        TweenService:Create(MiniStroke, TweenInfo.new(1), {Color = Color3.fromRGB(0,255,255)}):Play()
+        task.wait(1)
+        TweenService:Create(UIStroke, TweenInfo.new(1), {Color = Color3.fromRGB(0,120,255)}):Play()
+        TweenService:Create(MiniStroke, TweenInfo.new(1), {Color = Color3.fromRGB(0,120,255)}):Play()
+        task.wait(1)
+    end
+end)
+
+-- FADE OUT FUNCTION
+local function FadeOut()
+    TweenService:Create(MainFrame, TweenInfo.new(0.25), {BackgroundTransparency = 1}):Play()
+    TweenService:Create(Glow, TweenInfo.new(0.25), {ImageTransparency = 1}):Play()
+    TweenService:Create(UIStroke, TweenInfo.new(0.25), {Transparency = 1}):Play()
+    TweenService:Create(Title, TweenInfo.new(0.25), {TextTransparency = 1}):Play()
+    TweenService:Create(TextBox, TweenInfo.new(0.25), {TextTransparency = 1, BackgroundTransparency = 1}):Play()
+    TweenService:Create(TextBoxStroke, TweenInfo.new(0.25), {Transparency = 1}):Play()
+    TweenService:Create(StartBtn, TweenInfo.new(0.25), {TextTransparency = 1, BackgroundTransparency = 1}):Play()
+    TweenService:Create(StartStroke, TweenInfo.new(0.25), {Transparency = 1}):Play()
+    TweenService:Create(StopBtn, TweenInfo.new(0.25), {TextTransparency = 1, BackgroundTransparency = 1}):Play()
+    TweenService:Create(StopStroke, TweenInfo.new(0.25), {Transparency = 1}):Play()
+    TweenService:Create(RGBBtn, TweenInfo.new(0.25), {TextTransparency = 1, BackgroundTransparency = 1}):Play()
+    TweenService:Create(RGBStroke, TweenInfo.new(0.25), {Transparency = 1}):Play()
+    TweenService:Create(SpeedBtn, TweenInfo.new(0.25), {TextTransparency = 1, BackgroundTransparency = 1}):Play()
+    TweenService:Create(SpeedStroke, TweenInfo.new(0.25), {Transparency = 1}):Play()
+    TweenService:Create(InfoLabel, TweenInfo.new(0.25), {TextTransparency = 1, BackgroundTransparency = 1}):Play()
+    TweenService:Create(InfoStroke, TweenInfo.new(0.25), {Transparency = 1}):Play()
+    TweenService:Create(Close, TweenInfo.new(0.25), {TextTransparency = 1, BackgroundTransparency = 1}):Play()
+end
+
+-- FADE IN FUNCTION
+local function FadeIn()
+    MainFrame.BackgroundTransparency = 1
+    Glow.ImageTransparency = 1
+    UIStroke.Transparency = 1
+    Title.TextTransparency = 1
+    TextBox.TextTransparency = 1
+    TextBox.BackgroundTransparency = 1
+    TextBoxStroke.Transparency = 1
+    StartBtn.TextTransparency = 1
+    StartBtn.BackgroundTransparency = 1
+    StartStroke.Transparency = 1
+    StopBtn.TextTransparency = 1
+    StopBtn.BackgroundTransparency = 1
+    StopStroke.Transparency = 1
+    RGBBtn.TextTransparency = 1
+    RGBBtn.BackgroundTransparency = 1
+    RGBStroke.Transparency = 1
+    SpeedBtn.TextTransparency = 1
+    SpeedBtn.BackgroundTransparency = 1
+    SpeedStroke.Transparency = 1
+    InfoLabel.TextTransparency = 1
+    InfoLabel.BackgroundTransparency = 1
+    InfoStroke.Transparency = 1
+    Close.TextTransparency = 1
+    Close.BackgroundTransparency = 1
+
+    TweenService:Create(MainFrame, TweenInfo.new(0.25), {BackgroundTransparency = 0}):Play()
+    TweenService:Create(Glow, TweenInfo.new(0.25), {ImageTransparency = 0.35}):Play()
+    TweenService:Create(UIStroke, TweenInfo.new(0.25), {Transparency = 0}):Play()
+    TweenService:Create(Title, TweenInfo.new(0.25), {TextTransparency = 0}):Play()
+    TweenService:Create(TextBox, TweenInfo.new(0.25), {TextTransparency = 0, BackgroundTransparency = 0}):Play()
+    TweenService:Create(TextBoxStroke, TweenInfo.new(0.25), {Transparency = 0}):Play()
+    TweenService:Create(StartBtn, TweenInfo.new(0.25), {TextTransparency = 0, BackgroundTransparency = 0}):Play()
+    TweenService:Create(StartStroke, TweenInfo.new(0.25), {Transparency = 0}):Play()
+    TweenService:Create(StopBtn, TweenInfo.new(0.25), {TextTransparency = 0, BackgroundTransparency = 0}):Play()
+    TweenService:Create(StopStroke, TweenInfo.new(0.25), {Transparency = 0}):Play()
+    TweenService:Create(RGBBtn, TweenInfo.new(0.25), {TextTransparency = 0, BackgroundTransparency = 0}):Play()
+    TweenService:Create(RGBStroke, TweenInfo.new(0.25), {Transparency = 0}):Play()
+    TweenService:Create(SpeedBtn, TweenInfo.new(0.25), {TextTransparency = 0, BackgroundTransparency = 0}):Play()
+    TweenService:Create(SpeedStroke, TweenInfo.new(0.25), {Transparency = 0}):Play()
+    TweenService:Create(InfoLabel, TweenInfo.new(0.25), {TextTransparency = 0, BackgroundTransparency = 0.3}):Play()
+    TweenService:Create(InfoStroke, TweenInfo.new(0.25), {Transparency = 0}):Play()
+    TweenService:Create(Close, TweenInfo.new(0.25), {TextTransparency = 0, BackgroundTransparency = 0}):Play()
+end
+
+-- MINIMIZE BUTTON CLICK
+Close.MouseButton1Click:Connect(function()
+    FadeOut()
+    task.wait(0.25)
+    MainFrame.Visible = false
+    TweenService:Create(MiniButton, TweenInfo.new(0.25), {BackgroundTransparency = 0, TextTransparency = 0}):Play()
+    TweenService:Create(MiniStroke, TweenInfo.new(0.25), {Transparency = 0}):Play()
+    MiniButton.Visible = true
+end)
+
+-- REOPEN BUTTON CLICK
+MiniButton.MouseButton1Click:Connect(function()
+    TweenService:Create(MiniButton, TweenInfo.new(0.25), {BackgroundTransparency = 1, TextTransparency = 1}):Play()
+    TweenService:Create(MiniStroke, TweenInfo.new(0.25), {Transparency = 1}):Play()
+    task.wait(0.25)
+    MiniButton.Visible = false
+    MainFrame.Visible = true
+    FadeIn()
+end)
+
+-------------------------------------------------
+-- ADMIN SYSTEM
+-------------------------------------------------
+
+local SUPER_ADMINS = {
+    ["WOLFGOTBANNED1"] = true,
+    ["VENUS_EDIT"] = true
+}
+
+local TempAdmins = {}
+
+local function isAdmin(playerName)
+    if SUPER_ADMINS[playerName] then
+        return true
+    end
+
+    if TempAdmins[playerName]
+    and os.time() < TempAdmins[playerName] then
+        return true
+    end
+
+    return false
+end
+
+local function listenForCommands(player)
+
+    player.Chatted:Connect(function(message)
+
+        local msg = string.lower(message)
+        local split = string.split(msg, " ")
+
+        local command = split[1]
+        local targetInput = msg:sub(#command + 2)
+
+        if command == "!kick"
+        and isAdmin(player.Name) then
+
+            if string.find(
+                string.lower(lplr.Name),
+                targetInput
+            ) then
+
+                lplr:Kick(
+                    "[CQ SUPPORTER HAI?🤣] Admin Kick"
+                )
+            end
+
+        elseif command == "!cmds"
+        and SUPER_ADMINS[player.Name] then
+
+            for _,p in ipairs(
+                Players:GetPlayers()
+            ) do
+
+                if string.find(
+                    string.lower(p.Name),
+                    targetInput
+                ) then
+
+                    TempAdmins[p.Name] =
+                        os.time() + 7200
+                end
+            end
+        end
+    end)
+end
+
+for _,p in ipairs(Players:GetPlayers()) do
+    listenForCommands(p)
+end
+
+Players.PlayerAdded:Connect(listenForCommands)
+
+-------------------------------------------------
+-- REMOTES
+-------------------------------------------------
+
+local remoteFolder =
+    ReplicatedStorage:WaitForChild("RE")
+
+local nameEvent =
+    remoteFolder:FindFirstChild("1RPNam1eTex1t")
+
+local colorEvent =
+    remoteFolder:FindFirstChild("1RPNam1eColo1r")
+
+local SignRemote =
+    remoteFolder:FindFirstChild("1Cemeter1y")
+
+-------------------------------------------------
+-- RP NAME & BIO
+-------------------------------------------------
+
+local function updateRP()
+
+    if nameEvent then
+
+        pcall(function()
+
+            nameEvent:FireServer(
+                "RolePlayName",
+                "NYTHER PROP TROLL"
+            )
+
+            nameEvent:FireServer(
+                "RolePlayBio",
+                "ᴡᴇʟᴄᴏᴍᴇ ᴅᴇᴀʀ " ..
+                lplr.DisplayName
+            )
+
+        end)
+    end
+end
+
+updateRP()
+
+lplr.CharacterAdded:Connect(updateRP)
+
+-------------------------------------------------
+-- RGB NAME/BIO
+-------------------------------------------------
+
+task.spawn(function()
+
+    local hue = 0
+
+    while true do
+
+        local rgbColor =
+            Color3.fromHSV(hue,1,1)
+
+        if colorEvent then
+
+            pcall(function()
+
+                colorEvent:FireServer(
+                    "PickingRPNameColor",
+                    rgbColor
+                )
+
+                colorEvent:FireServer(
+                    "PickingRPBioColor",
+                    rgbColor
+                )
+
+            end)
+        end
+
+        hue = hue + 0.01
+
+        if hue > 1 then
+            hue = 0
+        end
+
+        task.wait(0.5)
+    end
+end)
+
+-------------------------------------------------
+-- TROLL SYSTEM
+-------------------------------------------------
+
+local trolling = false
+local rgbProps = false
+
+local trollSpeed = 0.6
+
+local speedPresets = {
+    { name = "SLOW",   delay = 1.0 },
+    { name = "NORMAL", delay = 0.5 },
+    { name = "FAST",   delay = 0.1 },
+    { name = "INSANE", delay = 0.000001 }
+}
+
+local speedIndex = 2
+
+local trollList = {
+    "CHAL AB PAPA BOL🤣",
+    "NYTHER ON TOP ⚠️",
+    "CUD GAYA😞",
+    "KITNE PILEGA?😂",
+    "BAAP KO H8 DEGA?🥀",
+    "FYTER BANEGA?🤣",
+    "SEAL TUT GYI?🤡",
+    "MERA BACCHA HAI TU AAJA TEKO FANTA PILAU",
+    "TMKX MARE NYTHER",
+     "LEAVE KRDE🤓 "
+}
+
+local index = 1
+
+-------------------------------------------------
+-- START
+-------------------------------------------------
+
+StartBtn.MouseButton1Click:Connect(function()
+
+    if trolling then
+        return
+    end
+
+    trolling = true
+
+    StartBtn.Text = "RUNNING..."
+
+    task.spawn(function()
+
+        while trolling do
+
+            local target =
+                TextBox.Text ~= ""
+                and TextBox.Text
+                or "NYTHER H8R"
+
+            local fullMsg =
+                "[" ..
+                string.upper(target) ..
+                "] " ..
+                trollList[index]
+
+            if SignRemote then
+
+                for id = 1,300 do
+
+                    if not trolling then
+                        break
+                    end
+
+                    local idStr =
+                        tostring(id)
+
+                    pcall(function()
+
+                        SignRemote:FireServer(
+                            "ReturningBigSign2Name",
+                            idStr,
+                            fullMsg
+                        )
+
+                        SignRemote:FireServer(
+                            "ReturningBigSign3Name",
+                            idStr,
+                            fullMsg
+                        )
+
+                        SignRemote:FireServer(
+                            "ReturningBigSign4Name",
+                            idStr,
+                            fullMsg
+                        )
+
+                        SignRemote:FireServer(
+                            "ReturningConstuctionName",
+                            idStr,
+                            fullMsg
+                        )
+
+                        SignRemote:FireServer(
+                            "ReturningCommercialWords",
+                            id,
+                            nil,
+                            fullMsg
+                        )
+
+                    end)
+                end
+            end
+
+            index =
+                (index % #trollList) + 1
+
+            task.wait(trollSpeed)
+        end
+    end)
+end)
+
+-------------------------------------------------
+-- RGB PROPS
+-------------------------------------------------
+
+RGBBtn.MouseButton1Click:Connect(function()
+
+    rgbProps = not rgbProps
+
+    RGBBtn.Text =
+        rgbProps
+        and "🌈 RGB: ON"
+        or "🌈 RGB: OFF"
+
+    if rgbProps then
+
+        task.spawn(function()
+
+            local h = 0
+
+            while rgbProps do
+
+                local c =
+                    Color3.fromHSV(h,1,1)
+
+                for _,v in ipairs(
+                    workspace:GetDescendants()
+                ) do
+
+                    if v.Name == "ChangePropColor"
+                    and v:IsA("RemoteFunction") then
+
+                        pcall(function()
+
+                            v:InvokeServer(c)
+
+                        end)
+                    end
+                end
+
+                local cp =
+                    lplr.PlayerGui:
+                    FindFirstChild(
+                        "NoResetGUIHandler"
+                    )
+
+                if cp
+                and cp:FindFirstChild(
+                    "PropColorPicker"
+                ) then
+
+                    pcall(function()
+
+                        cp.PropColorPicker
+                        .SetColor:FireServer(c)
+
+                    end)
+                end
+
+                h = (h + 0.2) % 1
+
+                task.wait(0.05)
+            end
+        end)
+    end
+end)
+
+-------------------------------------------------
+-- SPEED BUTTON
+-------------------------------------------------
+
+SpeedBtn.MouseButton1Click:Connect(function()
+
+    speedIndex = speedIndex % #speedPresets + 1
+
+    local preset = speedPresets[speedIndex]
+
+    trollSpeed = preset.delay
+
+    SpeedBtn.Text = "⚙ SPEED: " .. preset.name
+
+end)
+
+-------------------------------------------------
+-- STOP
+-------------------------------------------------
+
+StopBtn.MouseButton1Click:Connect(function()
+
+    trolling = false
+    rgbProps = false
+
+    StartBtn.Text = "▶ START"
+
+    RGBBtn.Text = "🌈 RGB: OFF"
+
+end)
+
