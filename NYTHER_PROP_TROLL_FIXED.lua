@@ -495,7 +495,7 @@ task.spawn(function()
             end)
         end
 
-        hue = hue + 0.01
+        hue = hue + 0.02
 
         if hue > 1 then
             hue = 0
